@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api; // <--- Namespace diperbaiki
 
+use App\Http\Controllers\Controller;
 use App\Models\MonitoringLog;
 use App\Models\UserPlant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 
 class MonitoringLogController extends Controller
 {
@@ -15,11 +15,10 @@ class MonitoringLogController extends Controller
         $request->validate([
             'user_plant_id' => 'required|exists:user_plants,id',
             'log_date' => 'required|date',
-            'condition' => 'required|string', // healthy, wilted, etc
-            'photo' => 'nullable|image|max:2048' // Max 2MB
+            'condition' => 'required|string',
+            'photo' => 'nullable|image|max:2048'
         ]);
 
-        // Security Check: Pastikan tanaman milik user yang login
         $plant = UserPlant::where('id', $request->user_plant_id)
             ->where('user_id', Auth::id())
             ->first();
@@ -28,7 +27,6 @@ class MonitoringLogController extends Controller
             return response()->json(['message' => 'Akses ditolak'], 403);
         }
 
-        // Handle Upload Foto
         $photoPath = null;
         if ($request->hasFile('photo')) {
             $photoPath = $request->file('photo')->store('monitoring_photos', 'public');

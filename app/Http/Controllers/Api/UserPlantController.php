@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api; // <--- Namespace diperbaiki
 
+use App\Http\Controllers\Controller;
 use App\Models\UserPlant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class UserPlantController extends Controller
 {
-    // List tanaman milik user login
     public function index()
     {
-        $plants = UserPlant::with('species') // Ambil info spesiesnya juga
+        $plants = UserPlant::with('species')
             ->where('user_id', Auth::id())
             ->orderBy('created_at', 'desc')
             ->get();
@@ -19,7 +19,6 @@ class UserPlantController extends Controller
         return response()->json(['success' => true, 'data' => $plants]);
     }
 
-    // Tambah tanaman baru
     public function store(Request $request)
     {
         $request->validate([
@@ -30,7 +29,7 @@ class UserPlantController extends Controller
         ]);
 
         $plant = UserPlant::create([
-            'user_id' => Auth::id(), // ID dari token
+            'user_id' => Auth::id(),
             'species_id' => $request->species_id,
             'planting_date' => $request->planting_date,
             'location' => $request->location,
@@ -41,7 +40,6 @@ class UserPlantController extends Controller
         return response()->json(['success' => true, 'message' => 'Tanaman ditambahkan', 'data' => $plant], 201);
     }
 
-    // Detail tanaman + History Log
     public function show($id)
     {
         $plant = UserPlant::with(['species', 'logs' => function($q) {
