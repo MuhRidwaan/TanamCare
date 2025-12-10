@@ -1,66 +1,211 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+🌱 TanamCare API (Backend)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+TanamCare adalah layanan Backend API untuk aplikasi monitoring tanaman berbasis mobile. Aplikasi ini dirancang untuk membantu petani maupun penghobi tanaman dalam memantau pertumbuhan, mendapatkan rekomendasi perawatan, serta menemukan solusi atas hama atau penyakit tanaman.
 
-## About Laravel
+Dibangun menggunakan teknologi web modern yang cepat, aman, dan scalable.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+🛠️ Spesifikasi Teknologi (Tech Stack)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Project ini dibangun dengan spesifikasi minimum berikut:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Bahasa Pemrograman: PHP (Versi 8.2 atau lebih baru)
 
-## Learning Laravel
+Framework: Laravel (Versi 12.x)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Database: PostgreSQL
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+API Authentication: Laravel Sanctum
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Web Server: Apache/Nginx (via Laragon/XAMPP atau Docker)
 
-## Laravel Sponsors
+✨ Fitur Utama
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+1. 🌿 Manajemen & Monitoring Tanaman
 
-### Premium Partners
+Log Harian: Pengguna dapat mencatat tinggi tanaman, jumlah daun, kondisi fisik, dan mengunggah foto perkembangan harian.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+My Garden: Pengguna dapat mengelola daftar tanaman yang sedang mereka tanam.
 
-## Contributing
+History: Melacak riwayat pertumbuhan dari hari pertama tanam hingga panen.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+2. 📚 Knowledge Base (Data Master)
 
-## Code of Conduct
+Katalog Spesies: Database lengkap mengenai jenis tanaman (nama ilmiah, suhu optimal, kebutuhan cahaya, frekuensi penyiraman).
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Plant Issues: Database penyakit, hama, dan solusi penanganannya.
 
-## Security Vulnerabilities
+3. 🛡️ Keamanan & Audit Data
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Autentikasi: Register & Login menggunakan Token (Bearer Token).
 
-## License
+Data Audit:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Soft Deletes: Data tanaman yang dihapus tidak hilang permanen (deleted_at).
+
+User Tracking: Mengetahui siapa admin yang mengubah data master (created_by, updated_by).
+
+🚀 Panduan Instalasi (Localhost)
+
+Ikuti langkah berikut untuk menjalankan aplikasi di komputer lokal Anda.
+
+Prasyarat
+
+Pastikan Anda sudah menginstall:
+
+PHP >= 8.2
+
+Composer
+
+PostgreSQL Database
+
+Langkah-langkah
+
+Clone Repository
+
+git clone [https://github.com/MuhRidwaan/tanam-care-backend.git](https://github.com/MuhRidwaan/tanam-care-backend.git)
+cd tanam-care-backend
+
+Install Dependencies
+
+composer install
+
+Konfigurasi Environment
+Duplikat file .env.example menjadi .env:
+
+cp .env.example .env
+
+Setup Database (PostgreSQL)
+Buka file .env dan sesuaikan konfigurasi database Anda. Pastikan DB_CONNECTION diubah ke pgsql.
+
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=tanamcare_db
+DB_USERNAME=postgres
+DB_PASSWORD=password_anda
+
+Generate Key & Migrasi Database
+
+php artisan key:generate
+php artisan migrate
+
+Jalankan Server
+
+php artisan serve
+
+Aplikasi akan berjalan di http://127.0.0.1:8000.
+
+🔌 Dokumentasi API (Endpoints)
+
+Gunakan Postman atau Insomnia untuk mengakses endpoint berikut.
+Header Wajib: Accept: application/json
+
+Auth
+
+Method
+
+Endpoint
+
+Deskripsi
+
+POST
+
+/api/register
+
+Mendaftar akun baru
+
+POST
+
+/api/login
+
+Masuk dan mendapatkan Token
+
+POST
+
+/api/logout
+
+Keluar (Hapus Token)
+
+Tanaman Saya (Butuh Token)
+
+Method
+
+Endpoint
+
+Deskripsi
+
+GET
+
+/api/my-plants
+
+List semua tanaman user
+
+POST
+
+/api/my-plants
+
+Tambah tanaman baru
+
+GET
+
+/api/my-plants/{id}
+
+Detail tanaman & history log
+
+Monitoring & Logs (Butuh Token)
+
+Method
+
+Endpoint
+
+Deskripsi
+
+POST
+
+/api/logs
+
+Input data monitoring harian (Support Upload Foto)
+
+Master Data (Public/Auth)
+
+Method
+
+Endpoint
+
+Deskripsi
+
+GET
+
+/api/species
+
+Lihat katalog tanaman
+
+GET
+
+/api/issues
+
+Lihat daftar penyakit & solusi
+
+POST
+
+/api/species
+
+Tambah spesies baru (Admin)
+
+📂 Struktur Database
+
+Aplikasi menggunakan skema relasional dengan tabel utama:
+
+users: Data pengguna (Role: User/Admin).
+
+plant_species: Katalog referensi tanaman.
+
+user_plants: Instance tanaman milik user.
+
+monitoring_logs: Catatan transaksional harian.
+
+plant_issues: Referensi hama dan solusi.
+
+📝 Lisensi
+
+Project ini bersifat Open Source di bawah lisensi MIT.

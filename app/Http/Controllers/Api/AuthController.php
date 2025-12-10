@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Api; // <--- PERHATIKAN INI (Ada tambahan \Api)
+namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller; // Import Base Controller
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,12 +12,22 @@ class AuthController extends Controller
 {
     public function register(Request $request)
     {
+        // 1. Definisikan Pesan Error Custom (Bahasa Indonesia)
+        $messages = [
+            'email.unique' => 'Email ini sudah terdaftar. Silakan login jika Anda sudah punya akun.',
+            'email.required' => 'Email wajib diisi.',
+            'password.min' => 'Password minimal harus 6 karakter.',
+        ];
+
+        // 2. Lakukan Validasi
+        // Parameter kedua adalah $messages yang kita buat di atas
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|unique:users',
+            'email' => 'required|string|email|unique:users', // <--- unique:users adalah kuncinya
             'password' => 'required|string|min:6'
-        ]);
+        ], $messages);
 
+        // 3. Jika lolos validasi (email belum ada), buat user baru
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -37,9 +47,17 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+        $request->validate([
+            'email' => 'required|string|email',
+            'password' => 'required|string'
+        ]);
+
+      
         if (!Auth::attempt($request->only('email', 'password'))) {
-            return response()->json(['message' => 'Login gagal, cek kredensial'], 401);
+        // print_r("masuke ke balok gagal");
+            return response()->json(['message' => 'Login gagal, cek email atau password Anda'], 401);
         }
+        // dd("masuke ke balok ini");
 
         $user = User::where('email', $request->email)->firstOrFail();
         $token = $user->createToken('auth_token')->plainTextToken;
@@ -51,15 +69,14 @@ class AuthController extends Controller
             'user' => $user
         ]);
     }
-    
+
     public function logout()
     {
-        // Cek jika user login
         if (Auth::check()) {
             Auth::user()->tokens()->delete();
             return response()->json(['message' => 'Logout berhasil']);
         }
-        
+
         return response()->json(['message' => 'User tidak ditemukan'], 404);
     }
 }

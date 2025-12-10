@@ -11,12 +11,10 @@ class PlantSpeciesController extends Controller
 {
     /**
      * GET /api/species
-     * Menampilkan semua katalog tanaman.
-     * Digunakan saat user ingin memilih tanaman untuk ditambahkan.
      */
     public function index()
     {
-        $species = PlantSpecies::select('id', 'name', 'scientific_name', 'description', 'watering_frequency_days')
+        $species = PlantSpecies::select('id', 'name', 'scientific_name', 'description', 'image_url')
             ->orderBy('name', 'asc')
             ->get();
 
@@ -28,11 +26,10 @@ class PlantSpeciesController extends Controller
 
     /**
      * GET /api/species/{id}
-     * Menampilkan detail lengkap perawatan tanaman + penyakit umumnya.
      */
     public function show($id)
     {
-        // Eager load 'issues' (hama/penyakit) yang terkait dengan tanaman ini
+        // Eager load 'issues' (hama/penyakit)
         $species = PlantSpecies::with('issues')->find($id);
 
         if (!$species) {
@@ -50,34 +47,37 @@ class PlantSpeciesController extends Controller
 
     /**
      * POST /api/species
-     * Menambah master data tanaman baru (Biasanya untuk Admin).
+     * Menambah master data tanaman baru.
      */
     public function store(Request $request)
     {
-        // Opsional: Cek apakah user adalah admin
-        // if ($request->user()->role !== 'admin') {
-        //     return response()->json(['message' => 'Unauthorized'], 403);
-        // }
-
+        // Validasi sesuai tabel plant_species terbaru
         $request->validate([
             'name' => 'required|string|max:255',
             'scientific_name' => 'nullable|string|max:255',
             'description' => 'nullable|string',
-            'watering_frequency_days' => 'required|integer|min:1',
+            'image_url' => 'nullable|url',
+            
+            // Kolom teknis pertanian
+            'soil_recommendation' => 'nullable|string',
+            'planting_distance' => 'nullable|string',
+            'sunlight_needs' => 'nullable|string', // Rename dari sunlight_requirement
             'optimal_temp_min' => 'nullable|integer',
             'optimal_temp_max' => 'nullable|integer',
-            'sunlight_requirement' => 'nullable|string' // full_sun, shade, etc
+            'harvest_duration_days' => 'nullable|integer',
         ]);
 
         $species = PlantSpecies::create([
             'name' => $request->name,
             'scientific_name' => $request->scientific_name,
             'description' => $request->description,
-            'watering_frequency_days' => $request->watering_frequency_days,
+            'image_url' => $request->image_url,
+            'soil_recommendation' => $request->soil_recommendation,
+            'planting_distance' => $request->planting_distance,
+            'sunlight_needs' => $request->sunlight_needs,
             'optimal_temp_min' => $request->optimal_temp_min,
             'optimal_temp_max' => $request->optimal_temp_max,
-            'sunlight_requirement' => $request->sunlight_requirement,
-            'created_by' => Auth::id(), // Audit user
+            'harvest_duration_days' => $request->harvest_duration_days,
         ]);
 
         return response()->json([

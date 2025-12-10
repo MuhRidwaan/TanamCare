@@ -11,24 +11,19 @@ class PlantIssueController extends Controller
 {
     /**
      * GET /api/issues
-     * Menampilkan daftar penyakit/hama.
-     * Bisa difilter berdasarkan species_id.
-     * Contoh: /api/issues?species_id=1
      */
     public function index(Request $request)
     {
-        $query = PlantIssue::with('species:id,name'); // Eager load nama spesies
+        $query = PlantIssue::with('species:id,name');
 
-        // Jika ada parameter ?species_id=1
         if ($request->has('species_id')) {
-            // Ambil issue yang KHUSUS untuk tanaman ini ATAU issue UMUM (null)
             $query->where(function($q) use ($request) {
                 $q->where('species_id', $request->species_id)
                   ->orWhereNull('species_id');
             });
         }
 
-        $issues = $query->orderBy('problem_name', 'asc')->get();
+        $issues = $query->orderBy('name', 'asc')->get(); 
 
         return response()->json([
             'success' => true,
@@ -39,7 +34,6 @@ class PlantIssueController extends Controller
 
     /**
      * GET /api/issues/{id}
-     * Detail solusi lengkap.
      */
     public function show($id)
     {
@@ -48,7 +42,7 @@ class PlantIssueController extends Controller
         if (!$issue) {
             return response()->json([
                 'success' => false,
-                'message' => 'Data penyakit/solusi tidak ditemukan'
+                'message' => 'Data penyakit tidak ditemukan'
             ], 404);
         }
 
@@ -60,25 +54,27 @@ class PlantIssueController extends Controller
 
     /**
      * POST /api/issues
-     * Menambah knowledge base penyakit baru.
      */
     public function store(Request $request)
     {
         $request->validate([
-            'species_id' => 'nullable|exists:plant_species,id', // Boleh null (masalah umum)
-            'problem_name' => 'required|string|max:255',
-            'symptoms' => 'required|string',
-            'solution' => 'required|string',
+            'species_id' => 'nullable|exists:plant_species,id',
+            'name' => 'required|string|max:255', 
+            'scientific_name' => 'nullable|string|max:255',
+            'symptoms' => 'nullable|string',
+            'cause' => 'nullable|string',
+            'solution' => 'nullable|string',
             'prevention' => 'nullable|string'
         ]);
 
         $issue = PlantIssue::create([
             'species_id' => $request->species_id,
-            'problem_name' => $request->problem_name,
+            'name' => $request->name,
+            'scientific_name' => $request->scientific_name,
             'symptoms' => $request->symptoms,
+            'cause' => $request->cause,
             'solution' => $request->solution,
             'prevention' => $request->prevention,
-            'created_by' => Auth::id()
         ]);
 
         return response()->json([

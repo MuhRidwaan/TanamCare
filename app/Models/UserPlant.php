@@ -3,15 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class UserPlant extends Model
 {
-    use SoftDeletes;
-
     protected $fillable = [
-        'user_id', 'species_id', 'nickname', 
-        'location', 'planting_date', 'status'
+        'user_id', 
+        'species_id', 
+        'nickname', 
+        'location_type', // Dulu location
+        'planting_date', 
+        'growth_stage',  // seedling, vegetative, dll
+        'status'         // healthy, sick, dead
     ];
 
     // Relasi ke User
@@ -20,15 +22,27 @@ class UserPlant extends Model
         return $this->belongsTo(User::class);
     }
 
-    // Relasi ke Master Species (untuk ambil detail cara rawat)
+    // Relasi ke Master Species (Detail tanaman)
     public function species()
     {
         return $this->belongsTo(PlantSpecies::class, 'species_id');
     }
 
-    // Relasi ke Log Harian
-    public function logs()
+    // Relasi ke Log Pertumbuhan (Angka: tinggi, jumlah daun)
+    public function monitoringLogs()
     {
         return $this->hasMany(MonitoringLog::class, 'user_plant_id');
+    }
+
+    // Relasi ke Log Perawatan (Siram, pupuk)
+    public function careLogs()
+    {
+        return $this->hasMany(CareLog::class, 'user_plant_id');
+    }
+
+    // Relasi ke History Scan
+    public function scanHistories()
+    {
+        return $this->hasMany(ScanHistory::class, 'user_plant_id');
     }
 }

@@ -17,21 +17,32 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-             $table->string('role')->default('user'); 
-    
-    $table->rememberToken();
-    $table->timestamps();
-    $table->softDeletes(); 
+            
+            // Role management (Sesuai request Anda)
+            $table->string('role')->default('user')->comment('admin / user');
+
+            // --- TAMBAHAN KHUSUS TANAMAN ---
+            // Lokasi (Decimal presisi tinggi untuk GPS agar akurat)
+            // Disimpan saat register atau update profile untuk fitur cuaca
+            $table->decimal('latitude', 10, 8)->nullable();
+            $table->decimal('longitude', 11, 8)->nullable();
+            $table->string('city')->nullable();
+
+            $table->rememberToken();
+            $table->timestamps();
+            
+            // Soft Deletes (Agar data tidak hilang permanen saat dihapus)
+            $table->softDeletes();
         });
 
-
-
+        // Tabel bawaan Laravel untuk Reset Password
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');
             $table->timestamp('created_at')->nullable();
         });
 
+        // Tabel bawaan Laravel untuk Session
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
             $table->foreignId('user_id')->nullable()->index();

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api; // <--- Namespace diperbaiki
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\UserPlant;
@@ -24,27 +24,29 @@ class UserPlantController extends Controller
         $request->validate([
             'species_id' => 'required|exists:plant_species,id',
             'planting_date' => 'required|date',
-            'location' => 'required|in:indoor,outdoor,greenhouse',
-            'nickname' => 'nullable|string'
+            'location_type' => 'required|in:indoor,outdoor,greenhouse', 
+            'nickname' => 'nullable|string|max:255'
         ]);
 
         $plant = UserPlant::create([
             'user_id' => Auth::id(),
             'species_id' => $request->species_id,
             'planting_date' => $request->planting_date,
-            'location' => $request->location,
+            'location_type' => $request->location_type, 
             'nickname' => $request->nickname,
-            'status' => 'growing'
+            'growth_stage' => 'seedling', 
+            'status' => 'healthy'         
         ]);
 
-        return response()->json(['success' => true, 'message' => 'Tanaman ditambahkan', 'data' => $plant], 201);
+        return response()->json(['success' => true, 'message' => 'Tanaman berhasil ditambahkan', 'data' => $plant], 201);
     }
 
     public function show($id)
     {
-        $plant = UserPlant::with(['species', 'logs' => function($q) {
-            $q->orderBy('log_date', 'desc');
-        }])->where('user_id', Auth::id())->find($id);
+        
+        $plant = UserPlant::with(['species'])
+            ->where('user_id', Auth::id())
+            ->find($id);
 
         if (!$plant) {
             return response()->json(['message' => 'Tanaman tidak ditemukan'], 404);
