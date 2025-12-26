@@ -29,6 +29,9 @@ class UserController extends Controller
             'latitude'  => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
             'city'      => 'nullable|string',
+            'first_name'=> 'nullable|string',
+            'last_name' => 'nullable|string',
+            'phone_number'=> 'nullable|string',
         ]);
 
         // Update data dasar
